@@ -1,0 +1,8 @@
+/* Smoothie: store and community pages */
+:root { --sm-bg:#191919; --sm-card:#252525; --sm-border:rgba(255,255,255,.094); --sm-text:rgba(255,255,255,.81); --sm-blue:#2383e2; }
+html, body, .responsive_page_template_content, .page_content_ctn { background: var(--sm-bg) !important; color: var(--sm-text) !important; font-family: ui-sans-serif, -apple-system, "Segoe UI Variable", "Segoe UI", Inter, Arial, sans-serif !important; }
+.home_page_content, .game_background_glow, .page_content, .game_page_background { background: var(--sm-bg) !important; }
+.store_header_btn, .btn_green_steamui, .btn_blue_steamui, a.btn_green_white_innerfade { border-radius: 4px !important; box-shadow: none !important; background: var(--sm-blue) !important; color: #fff !important; }
+.game_area_purchase_game, .block, .home_tab, .highlight_ctn { background: var(--sm-card) !important; border: 1px solid var(--sm-border) !important; border-radius: 6px !important; box-shadow: none !important; }
+a { color: var(--sm-blue) !important; }
+input[type="text"], input[type="search"] { background: rgba(255,255,255,.03) !important; border: 1px solid var(--sm-border) !important; border-radius: 4px !important; color: var(--sm-text) !important; }

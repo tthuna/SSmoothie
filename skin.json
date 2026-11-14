@@ -1,0 +1,15 @@
+{
+  "name": "Smoothie",
+  "description": "A calm dark Steam theme: flat neutral surfaces, thin borders, cover-art game list and a blurred backdrop of the selected game.",
+  "version": "0.4.0",
+  "author": "astra",
+  "github": {
+    "owner": "tthuna",
+    "repo_name": "SSmoothie"
+  },
+  "UseDefaultPatches": true,
+  "Patches": [
+    { "MatchRegexString": ".friendsui-container", "TargetCss": "libraryroot.custom.css", "TargetJs": "libraryroot.custom.js" }
+  ],
+  "Steam-WebKit": "webkit.css"
+}

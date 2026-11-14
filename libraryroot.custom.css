@@ -1,0 +1,612 @@
+/* Smoothie theme styles. Edit this file directly (no build step).
+   Steam's colors are remapped at runtime by libraryroot.custom.js; everything here sits in
+   @layer smoothie, whose !important rules beat both Steam's CSS and that remap. */
+@layer smoothie {
+/* Smoothie, dark theme for Steam. Targets the readable class names Steam ships next to its hashed ones
+   (inspect: 127.0.0.1:8080 with .cef-enable-remote-debugging). Loaded after the palette remap. */
+:root {
+  --sm-bg: #191919;
+  --sm-sidebar: #202020;
+  --sm-card: #252525;
+  --sm-hover: rgba(255, 255, 255, 0.055);
+  --sm-active: rgba(255, 255, 255, 0.09);
+  --sm-border: rgba(255, 255, 255, 0.094);
+  --sm-text: rgba(255, 255, 255, 0.81);
+  --sm-text-2: rgba(255, 255, 255, 0.46);
+  --sm-text-3: rgba(255, 255, 255, 0.282);
+  --sm-blue: #2383e2;
+  --sm-blue-hover: #0077d4;
+  --sm-r: 4px;
+  --sm-r-lg: 6px;
+  --sm-shadow:
+    rgba(15, 15, 15, 0.1) 0 0 0 1px, rgba(15, 15, 15, 0.2) 0 3px 6px,
+    rgba(15, 15, 15, 0.4) 0 9px 24px;
+  --sm-font:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text",
+    "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+}
+
+/* ---------- Game art backdrop (set by libraryroot.custom.js on a game page) ---------- */
+/* surfaces are nested several deep: they must be (almost) clear or the tints stack into opaque */
+html.smoothie-has-art {
+  --sm-bg: transparent;
+  --sm-sidebar: rgba(0, 0, 0, 0.22);
+  --sm-card: rgba(255, 255, 255, 0.045);
+}
+/* two layers (A = ::before, B = ::after) crossfade: JS loads the new art into the hidden one, then swaps */
+html.MillenniumWindow_MainSteamWindow body::before,
+html.MillenniumWindow_MainSteamWindow body::after {
+  content: "";
+  position: fixed;
+  inset: -120px; /* blur bleeds at the edges: oversize then clip */
+  background: var(--smoothie-art-a) center / cover no-repeat;
+  filter: blur(70px) saturate(1.25) brightness(0.42);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease !important; /* !important: Steam forces near-instant transitions (computed 0.02s) */
+}
+html.MillenniumWindow_MainSteamWindow body::after {
+  background-image: var(--smoothie-art-b);
+}
+html.smoothie-has-art:not(.smoothie-art-b) body::before,
+html.smoothie-has-art.smoothie-art-b body::after {
+  opacity: 1;
+}
+html.MillenniumWindow_MainSteamWindow body {
+  background: #191919 !important;
+  overflow: hidden;
+}
+html.MillenniumWindow_MainSteamWindow body > * {
+  position: relative;
+  z-index: 1;
+} /* above both layers, also while fading out */
+html.smoothie-has-art .ForceOpaqueBackground {
+  background: transparent !important;
+}
+html.smoothie-has-art .ImgBlurBackdrop,
+html.smoothie-has-art .ImgBlur {
+  opacity: 0 !important;
+}
+/* play bar sits over the hero and sticks over scrolled content: frosted so its text stays readable.
+   Tint + blur on the outer .PlayBar.Container only; the inner .Glassy stays clear (no double tint). */
+html.smoothie-has-art .PlayBar.Container {
+  background: rgba(22, 22, 22, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(1.3) !important;
+}
+html.smoothie-has-art .PlayBar.Glassy {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
+/* ---------- Base ---------- */
+body,
+body * {
+  font-family: var(--sm-font) !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+body {
+  background: #191919 !important;
+  color: var(--sm-text) !important;
+}
+::selection {
+  background: rgba(35, 131, 226, 0.35);
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ---------- Window chrome ---------- */
+.ForceOpaqueBackground {
+  background: #191919 !important;
+  border-color: var(--sm-border) !important;
+}
+.TopBar,
+.TitleBar,
+.RootMenuBar,
+.SuperNavBar,
+.SuperNav,
+.URLBar {
+  background: var(--sm-bg) !important;
+  box-shadow: none !important;
+}
+.TopBar {
+  border-bottom: 1px solid var(--sm-border) !important;
+}
+.RootMenuButton,
+.RootMenuButton * {
+  color: var(--sm-text-2) !important;
+}
+.RootMenuButton:hover,
+.RootMenuButton:hover * {
+  color: var(--sm-text) !important;
+}
+.SuperNavMenu .MenuButton {
+  color: var(--sm-text-2) !important;
+  font-weight: 600 !important;
+}
+.SuperNavMenu:hover .MenuButton {
+  color: var(--sm-text) !important;
+}
+.SuperNavMenu.Selected .MenuButton {
+  color: #fff !important;
+}
+.SuperNavMenu.Selected .MenuButton::after,
+.SuperNavMenu.Selected::after {
+  background: #fff !important;
+}
+.TitleBarControls .Button,
+.AccountMenu {
+  background: transparent !important;
+  border-radius: var(--sm-r) !important;
+  color: var(--sm-text-2) !important;
+}
+.TitleBarControls .Button:hover,
+.AccountMenu:hover {
+  background: var(--sm-hover) !important;
+  color: var(--sm-text) !important;
+}
+.TitleBarControls .Button.HasNew,
+.TitleBarControls .Button.Active {
+  color: var(--sm-blue) !important;
+}
+.title-area-highlight {
+  background: transparent !important;
+}
+.windowControlButton:hover {
+  background: var(--sm-hover) !important;
+}
+.closeButton:hover {
+  background: #e03e3e !important;
+}
+
+/* ---------- Sidebar ---------- */
+.LeftListSizableContainer,
+.LeftListSizableContainer > div,
+.GameListHomeAndSearch {
+  background: var(--sm-sidebar) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.LeftListSizableContainer {
+  border-right: 1px solid var(--sm-border) !important;
+  user-select: none !important;
+} /* no text highlight on click/drag */
+.LeftListSizableContainer input {
+  user-select: text !important;
+}
+/* name text: no highlight box on hover/drag, only the row hover */
+.GameListEntryContainer > span,
+.GameListEntryContainer > span:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.LeftListSizableContainer ::selection {
+  background: transparent !important;
+}
+.HomeBox .Bar,
+.CollectionButton {
+  background: transparent !important;
+  border: none !important;
+  border-radius: var(--sm-r) !important;
+  box-shadow: none !important;
+}
+.HomeBox .Bar .Icon {
+  opacity: 0 !important;
+} /* Steam logo watermark */
+.HomeBox .Bar:hover,
+.CollectionButton:hover,
+.HomeBox .Bar.Selected {
+  background: var(--sm-hover) !important;
+}
+.HomeBox .Label {
+  color: var(--sm-text) !important;
+  font-weight: 500 !important;
+}
+.SearchBar .MenuHeader,
+.SearchInput .DialogInput,
+.SearchInput input {
+  background: var(--sm-hover) !important;
+  border: none !important;
+  border-radius: var(--sm-r) !important;
+  box-shadow: none !important;
+  color: var(--sm-text) !important;
+}
+.SearchBar .SVGIcon_Arrow {
+  background: transparent !important;
+  border: none !important;
+}
+.CollapseIconParent {
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+}
+.CollapseIconParent:hover {
+  background: var(--sm-hover) !important;
+}
+.SectionName {
+  color: var(--sm-text-2) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+.GameListEntryContainer {
+  border-radius: var(--sm-r) !important;
+}
+.Installed,
+.Installed .GameListEntryContainer {
+  color: var(--sm-text) !important;
+}
+.Uninstalled,
+.Uninstalled .GameListEntryContainer {
+  color: var(--sm-text-2) !important;
+}
+.Installed:hover,
+.Uninstalled:hover {
+  background: var(--sm-hover) !important;
+}
+.Installed.Selected,
+.Uninstalled.Selected,
+.Selected > .GameListEntryContainer {
+  background: var(--sm-active) !important;
+  color: #fff !important;
+}
+
+/* Tall rows (52px, set by libraryroot.custom.js): cover + name + status, like a track list */
+html.smoothie-tall-rows .GameListEntryContainer {
+  display: grid !important;
+  grid-template-columns: 40px 1fr;
+  grid-template-rows: 20px 16px;
+  column-gap: 12px;
+  align-content: center;
+  height: 48px !important;
+  margin: 2px 6px !important;
+  padding: 0 8px !important;
+  border-radius: var(--sm-r-lg) !important;
+}
+html.smoothie-tall-rows .GameListEntryContainer .StatusIcon {
+  display: none !important;
+}
+html.smoothie-tall-rows .GameListEntryContainer .GameIcon {
+  grid-row: 1 / span 2;
+  width: 40px !important;
+  height: 40px !important;
+  margin: 0 !important;
+  border-radius: var(--sm-r) !important;
+  overflow: hidden;
+}
+html.smoothie-tall-rows .GameListEntryContainer .GameIcon img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+html.smoothie-tall-rows .GameListEntryContainer > span {
+  align-self: end;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+html.smoothie-tall-rows .GameListEntryContainer::after {
+  grid-column: 2;
+  align-self: start;
+  font-size: 12px;
+  color: var(--sm-text-2);
+}
+html.smoothie-tall-rows .Installed .GameListEntryContainer::after {
+  content: "Installed";
+}
+html.smoothie-tall-rows .Uninstalled .GameListEntryContainer::after {
+  content: "Not installed";
+  color: var(--sm-text-3);
+}
+html.smoothie-tall-rows .Installed:hover,
+html.smoothie-tall-rows .Uninstalled:hover {
+  background: transparent !important;
+}
+html.smoothie-tall-rows .GameListEntryContainer:hover {
+  background: var(--sm-hover) !important;
+}
+
+/* ---------- Main surfaces: one flat tone ---------- */
+/* strip between top bar and library (12px above the panels): Steam paints it near-black */
+.URLBarReplacement,
+.ContentFrame,
+.BrowserWrapper,
+.BrowserWrapper .Browser,
+.URLBar,
+.LocalContentContainer,
+.LocalContentContainer > .Container {
+  background: var(--sm-bg) !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.AppDetailsTransitionGroup,
+.AppDetailsMain,
+.MainPanel,
+.Body.ScrollContainer,
+.LibraryHome,
+.UpdatesContainer,
+.ColumnContainer {
+  background: var(--sm-bg) !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.InnerContainer > .Panel {
+  background: var(--sm-bg) !important;
+}
+.BackdropGlass,
+.Backdrop {
+  display: none !important;
+}
+.ImgBlurBackdrop {
+  opacity: 0 !important;
+}
+
+/* Play bar */
+.PlayBar,
+.PlayBar.Container,
+.PlayBar.Glassy {
+  background: var(--sm-bg) !important;
+  background-image: none !important;
+  border-bottom: 1px solid var(--sm-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.PlayButton,
+.ActionSection .ButtonChild {
+  background: var(--sm-blue) !important;
+  background-image: none !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--sm-r) !important;
+  box-shadow: none !important;
+  font-weight: 500 !important;
+}
+.PlayButton:hover,
+.ActionSection .ButtonChild:hover {
+  background: var(--sm-blue-hover) !important;
+}
+.ActionSection .StreamingSelector {
+  border-left: 1px solid rgba(0, 0, 0, 0.25) !important;
+}
+.GameStat,
+.GameStat * {
+  color: var(--sm-text-2) !important;
+}
+.GameStat .GameStatRight > div:first-child {
+  color: var(--sm-text) !important;
+  font-weight: 500 !important;
+}
+.RightControls .MenuButton {
+  background: transparent !important;
+  border-radius: var(--sm-r) !important;
+}
+.RightControls .MenuButton:hover {
+  background: var(--sm-hover) !important;
+}
+
+/* Tabs row (Store page, DLC, ...) */
+.LinksSection > .Panel {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--sm-border) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.LinksSection .Link {
+  border-radius: var(--sm-r) !important;
+}
+.LinksSection .Link .Text {
+  color: var(--sm-text-2) !important;
+}
+.LinksSection .Link:hover {
+  background: var(--sm-hover) !important;
+}
+.LinksSection .Link:hover .Text {
+  color: var(--sm-text) !important;
+}
+
+/* Section titles */
+.SectionHeader,
+.SectionHeader .LabelText,
+.AppActivityDate,
+.HeaderPageControls .Name {
+  color: var(--sm-text-2) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/* Right column cards */
+.RightColumn .AppDetailsSection > .Panel,
+.RightColumn .AppDetailsSection > div > .Panel {
+  background: var(--sm-sidebar) !important;
+  background-image: none !important;
+  border: 1px solid var(--sm-border) !important;
+  border-radius: var(--sm-r-lg) !important;
+  box-shadow: none !important;
+}
+.Highlight,
+.HighlightDiv,
+.BadgeSection,
+.ReviewMetadata,
+.Featured.Clickable {
+  background: var(--sm-hover) !important;
+  border-radius: var(--sm-r) !important;
+  box-shadow: none !important;
+}
+.UnachievedSection.ShowDivider {
+  border-color: var(--sm-border) !important;
+}
+.CardContainer {
+  border-radius: var(--sm-r) !important;
+}
+
+/* Activity feed */
+.PostTextEntryArea {
+  background: var(--sm-hover) !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--sm-r) !important;
+  color: var(--sm-text) !important;
+}
+.PostTextEntryArea:focus {
+  border-color: var(--sm-blue) !important;
+  box-shadow: 0 0 0 2px rgba(35, 131, 226, 0.3) !important;
+}
+.PostButton,
+.EmoticonButton {
+  background: var(--sm-hover) !important;
+  border: none !important;
+  border-radius: var(--sm-r) !important;
+}
+.PartnerEvent,
+.PartnerEvent > div {
+  background: var(--sm-sidebar) !important;
+  background-image: none !important;
+  border: 1px solid var(--sm-border) !important;
+  border-radius: var(--sm-r-lg) !important;
+  box-shadow: none !important;
+}
+.PartnerEvent > div {
+  border: none !important;
+}
+.PartnerEvent:hover {
+  background: var(--sm-card) !important;
+}
+.AppActivityDay {
+  border: none !important;
+}
+
+/* Library home */
+.Showcase {
+  border: none !important;
+  border-radius: var(--sm-r-lg) !important;
+}
+.RecentGameFooter {
+  background: var(--sm-card) !important;
+}
+.LibraryItemBoxShine {
+  display: none !important;
+}
+.LibraryItemBox {
+  border-radius: var(--sm-r-lg) !important;
+  overflow: hidden;
+  border-color: var(--sm-border) !important;
+}
+.LibraryItemActionButton.Play {
+  background: var(--sm-blue) !important;
+}
+.EventTime,
+.AddedDate {
+  color: var(--sm-text-3) !important;
+}
+
+/* ---------- Bottom bar ---------- */
+.BottomBarContainer,
+.BottomBar {
+  background: var(--sm-bg) !important;
+  border-top: 1px solid var(--sm-border) !important;
+  box-shadow: none !important;
+}
+.BottomBar .Text,
+.DownloadStatusContent .Queue {
+  color: var(--sm-text-2) !important;
+}
+.AddGameButton:hover .Text,
+.FriendsButton:hover .Text,
+.DownloadStatus:hover .Queue {
+  color: var(--sm-text) !important;
+}
+
+/* ---------- Controls ---------- */
+.DialogButton {
+  border-radius: var(--sm-r) !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: 1px solid var(--sm-border) !important;
+  color: var(--sm-text) !important;
+}
+.DialogButton:hover {
+  background: var(--sm-hover) !important;
+}
+.DialogButton.Primary {
+  background: var(--sm-blue) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
+.DialogButton.Primary:hover {
+  background: var(--sm-blue-hover) !important;
+}
+.DialogInput,
+.DialogTextInputBase,
+textarea {
+  background: var(--sm-hover) !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--sm-r) !important;
+  color: var(--sm-text) !important;
+  box-shadow: none !important;
+}
+.DialogInput:focus,
+.DialogTextInputBase:focus {
+  border-color: var(--sm-blue) !important;
+  box-shadow: 0 0 0 2px rgba(35, 131, 226, 0.3) !important;
+}
+.DialogDropDown {
+  background: transparent !important;
+  border: none !important;
+  border-radius: var(--sm-r) !important;
+}
+.DialogDropDown:hover {
+  background: var(--sm-hover) !important;
+}
+
+/* ---------- Menus (separate popup windows) ---------- */
+/* frosted, not see-through: fixed tint (not --sm-card, which turns clear over game art) + backdrop blur */
+.contextMenu,
+.MenuPopup,
+.BasicUIContextMenu {
+  background: rgba(37, 37, 37, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  border: none !important;
+  border-radius: var(--sm-r-lg) !important;
+  box-shadow: var(--sm-shadow) !important;
+  padding: 4px 0 !important;
+}
+.contextMenuItem,
+.MenuItem.Item {
+  border-radius: var(--sm-r) !important;
+  margin: 0 4px !important;
+  color: var(--sm-text) !important;
+  background: transparent !important;
+}
+.contextMenuItem:hover,
+.MenuItem.Item:hover,
+.contextMenuItem.active {
+  background: var(--sm-hover) !important;
+  color: var(--sm-text) !important;
+}
+.MenuItem.Separator {
+  border-color: var(--sm-border) !important;
+  background: var(--sm-border) !important;
+}
+}
