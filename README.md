@@ -10,15 +10,11 @@ A calm dark theme for the Steam client, made for [Millennium](https://steambrew.
 ## Install
 
 1. Install [Millennium](https://steambrew.app) and launch Steam once.
-2. Install Smoothie, either way:
-   - **Script** (PowerShell):
-     ```powershell
-     irm https://raw.githubusercontent.com/tthuna/SSmoothie/main/install.ps1 | iex
-     ```
-   - **Manual**: download the [ZIP](https://github.com/tthuna/SSmoothie/archive/refs/heads/main.zip), extract it and rename the folder to `smoothie`, then move it to `Steam\millennium\themes\`.
-3. Restart Steam, open Millennium settings > Themes and select **Smoothie**.
+2. On this page, click **Code > Download ZIP** and extract it.
+3. Double-click `install.cmd` in the extracted folder.
+4. Restart Steam, open Millennium settings > Themes and select **Smoothie**.
 
-Run the script again to update.
+To update, download the ZIP again and run `install.cmd` again.
 
 ## Uninstall
 
