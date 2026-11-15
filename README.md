@@ -28,3 +28,6 @@ No build step: edit `libraryroot.custom.css` / `libraryroot.custom.js` and resta
 ```sh
 node tests/color.test.mjs
 ```
+
+## Support
+https://ko-fi.com/tthunadev
