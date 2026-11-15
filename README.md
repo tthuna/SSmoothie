@@ -30,4 +30,4 @@ node tests/color.test.mjs
 ```
 
 ## Support
-https://ko-fi.com/tthunadev
+Smoothie is free. If you like it, you can [buy me a coffee on Ko-fi](https://ko-fi.com/tthunadev).
